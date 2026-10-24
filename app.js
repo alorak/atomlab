@@ -285,13 +285,25 @@ function shellSvg(e,info,color){
   const shells=info.shells;
   const outer=89, center=110;
   const ringCount=shells.length-1;
-  const radii=Array.from({length:ringCount},(_,i)=>ringCount===1?41:16+i*(59/(ringCount-1)));
+  // Keep the first-shell electron pair outside the symbol and distribute
+  // subsequent shells evenly between the nucleus and the valence ring.
+  // In particular, Si / Al / Cl / Ar use radii 41, 65, 89 (outer).
+  const innerShellRadii=[
+    [],
+    [43],
+    [41,65],
+    [38,56,73],
+    [36,49,62,75],
+    [34,44,55,65,76],
+    [32,41,50,59,68,77]
+  ];
+  const radii=innerShellRadii[ringCount];
   const rings=radii.map((r,i)=>{
     const n=shells[i];
-    const size=n>18?2.35:n>10?2.8:3.4;
+    const size=n===2?5:n>18?2.7:n>10?3.2:4;
     const pts=Array.from({length:n},(_,j)=>{
       const a=n===2?Math.PI*j:-Math.PI/2+(2*Math.PI*j/n);
-      return `<circle cx="${(center+r*Math.cos(a)).toFixed(2)}" cy="${(center+r*Math.sin(a)).toFixed(2)}" r="${size}" fill="#8da5b5" opacity=".61"/>`;
+      return `<circle cx="${(center+r*Math.cos(a)).toFixed(2)}" cy="${(center+r*Math.sin(a)).toFixed(2)}" r="${size}" fill="#7999ad" opacity="${n===2?".88":".78"}"/>`;
     }).join("");
     return `<circle cx="${center}" cy="${center}" r="${r.toFixed(2)}" stroke="#9db1bf" stroke-width="1" stroke-dasharray="3 4" fill="none" opacity=".68"/>${pts}`;
   }).join("");
