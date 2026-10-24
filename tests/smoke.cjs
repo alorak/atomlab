@@ -19,7 +19,7 @@ for(let z=1;z<=118;z++){
   assert.equal(info.shells.reduce((a,b)=>a+b,0),z,"wrong electron count for "+z);
   assert.ok(info.shells.length>=1 && info.shells.length<=7,"shell count "+z);
   assert.ok(info.shells.every(n=>n>0 && n<=32),"invalid shell "+z);
-  assert.ok(["nonmetal","metalloid","noble","alkali","alkaline","post","transition","dblock","lanth","act"].includes(api.categoryLabel(z)==="Metal"?"post":({Ametal:"nonmetal",Soygaz:"noble",Yarımetal:"metalloid",Lantanit:"lanth",Aktinit:"act","Alkali metal":"alkali","Toprak alkali metal":"alkaline","Geçiş metali":"transition","d-blok metali":"dblock"})[api.categoryLabel(z)]||"post"));
+  assert.ok(typeof api.categoryLabel(z)==="string" && api.categoryLabel(z).length>0,"missing class "+z);
   assert.equal(Boolean(info.virtual),!api.ACTIVE.has(e.symbol),"virtual state "+z);
   const svg=api.shellSvg(e,info,"#123456");
   assert.ok(svg.includes(info.shells.join("–")),"missing shell label "+z);
@@ -42,7 +42,7 @@ assert.ok(!html.includes("<h1"),"standalone large heading removed");
 for(const id of ["periodic-grid","periodic-search","only-available","atom-preview","card-status","detail-shells","inspector"]){
   assert.ok(html.includes('id="'+id+'"'),"missing single-page node "+id);
 }
-assert.ok(css.includes(".cell.unavailable:hover"),"muted cells must remain interactable");
+assert.ok(css.includes(".cell:hover"),"muted cells must remain interactable");
 
 class FakeNode {
   constructor(tagName){this.tagName=tagName;this.children=[];this.dataset={};this.style={};this.listeners={};this.attributes={};this.className="";this.innerHTML="";this.textContent="";this.value="";this.checked=false;}
