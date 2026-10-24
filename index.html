@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f6f8">
+  <meta name="description" content="Atom Laboratuvarı: periyodik tablo ve 25 elementin elektron kabuğu kartları.">
+  <title>Atom Laboratuvarı</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="brand"><span class="brand-icon" aria-hidden="true">⚛</span><div><strong>Atom Laboratuvarı</strong><small>Elementleri keşfet, atomları tanı.</small></div></div>
+      <nav class="nav" aria-label="Sayfalar">
+        <button type="button" class="nav-item active" data-page="periodic" aria-current="page">Periyodik Tablo</button>
+        <button type="button" class="nav-item" data-page="atoms">Atom Kartları</button>
+      </nav>
+    </header>
+    <main>
+      <section id="page-periodic" class="page active" aria-labelledby="periodic-heading">
+        <div class="page-heading"><div><span class="eyebrow">118 ELEMENT · 25 KART</span><h1 id="periodic-heading">Periyodik Tablo</h1><p>Kart setimizdeki elementler belirgin, diğerleri soluk renktedir. Kartı olan bir elemente tıklayarak incele.</p></div></div>
+        <div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="periodic-search" type="search" placeholder="Element adı, sembol veya atom numarası" aria-label="Periyodik tabloda ara"></label><label class="toggle"><input id="only-available" type="checkbox"> Yalnızca kart setindekiler</label></div>
+        <div class="legend"><span><i class="swatch nonmetal"></i> Ametal</span><span><i class="swatch metal"></i> Metal</span><span><i class="swatch noble"></i> Soygaz</span><span><i class="swatch metalloid"></i> Yarımetal</span><span class="legend-muted">Soluk = henüz kartı yok</span></div>
+        <div class="periodic-scroller" role="region" aria-label="Yatay kaydırılabilir periyodik tablo" tabindex="0"><div id="periodic-grid" class="periodic-grid"></div></div>
+        <p class="hint">Lantanitler ve aktinitler altta gösterilir. Renkler üç ana aileyi, yakın tonlar metal alt sınıflarını temsil eder.</p>
+      </section>
+      <section id="page-atoms" class="page" aria-labelledby="atoms-heading">
+        <div class="page-heading"><div><span class="eyebrow">25 ELEMENT · 3 SEVİYE</span><h1 id="atoms-heading">Atom Kartları</h1><p>Üstten bir atom seç. Sağdaki kartta iç elektron kabuklarını ve dış kabuktaki dolu / boş yuvaları incele.</p></div></div>
+        <div class="selector-header"><strong>Atom seç</strong><span>Seçili atomun kartı sağda açılır</span></div>
+        <div id="atom-selector" class="atom-selector" role="group" aria-label="Atom seçimi"></div>
+        <div class="study-layout">
+          <section class="learning-panel" aria-live="polite">
+            <div class="eyebrow">ATOMU TANI</div>
+            <h2 id="detail-title">Hidrojen</h2>
+            <p id="detail-description"></p>
+            <dl class="facts"><div><dt>Atom numarası</dt><dd id="detail-number"></dd></div><div><dt>Grup</dt><dd id="detail-group"></dd></div><div><dt>Elektron kabukları</dt><dd id="detail-shells"></dd></div><div><dt>Sınıf</dt><dd id="detail-type"></dd></div></dl>
+            <div class="note"><strong>Kartları nasıl okuyalım?</strong><p>Renkli noktalar dış kabuktaki elektronları, içi boş halkalar boş yuvaları temsil eder. İç kabuk elektronları daha soluk çizilir. Bu, gerçek orbital geometrisinin değil, öğretici bir kabuk modelinin çizimidir.</p></div>
+          </section>
+          <aside class="preview-area"><div class="preview-heading"><strong>Atom kartı</strong><span>57 × 66 mm kart tasarımı</span></div><div id="atom-preview"></div></aside>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">Atom Laboratuvarı · Elektron kabukları öğretici şema olarak gösterilir; elektronların uzaydaki gerçek konumları değildir.</footer>
+  </div>
+</body>
+</html>
