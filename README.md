@@ -1,38 +1,44 @@
 # Atom Laboratuvarı
 
-Basit, bağımsız ve Türkçe bir atom öğrenme arayüzü. İlk sürüm iki sayfadan oluşur:
+Türkçe ve bağımsız çalışan, **tek ekranlı** periyodik tablo / atom kartı uygulaması.
 
-- **Periyodik Tablo:** 118 elementin atom numarası, sembolü ve Türkçe adı; fiziksel kart setindeki **25 element belirgin**, geri kalanlar soluk gösterilir. Arama, kart setini filtreleme ve seçili elemente tıklayıp kartına geçiş bulunur.
-- **Atom Kartları:** Üstte 25 atom için seçim düğmeleri; sağda fiziksel kart tasarımına benzeyen kart, solda kabuk dağılımı ve kısa açıklama bulunur.
+- **Solda:** 118 elementin periyodik tablosu, arama alanı ve kart setini vurgulama seçeneği.
+- **Sağda:** seçilen elementin fiziksel kart tasarımındaki önizlemesi ve kısa özellikleri.
+- **25 fiziksel kart elementi** tam renkle işaretlenir.
+- **Diğer 93 element** tablo üzerinde belirgin biçimde soluktur, ancak hepsi tıklanabilir; sağdaki **sanal kart** aynı şekilde soluk gösterilir ve “Sanal kart · Sette yok” uyarısı taşır.
+- Ayrı “Atom Kartları” sekmesi, büyük sayfa başlığı veya tanıtım alanı bulunmaz.
+- Dar ekranlarda tablo yatay kaydırılabilir, seçim yapıldığında kart önizlemesine geçilir.
 
-## Görsel kurallar
+## Renk ve gösterim
 
-- **Ametaller:** mat mavi-gri; **metaller:** mat kiremit ve metal aileleri için yakın tonlar; **soygazlar:** petrol mavisi; **yarımetaller:** mavi-griye yakın ayrı bir ton.
-- Üst başlık koyu, kart gövdesi açık; sağ üstte yuvarlak içinde atom numarası; ortada element sembolü.
-- Değerlik kabuğunda 8 yuva simetrik şekilde **solda 4 + sağda 4**, H ve He için **2 yuva** bulunur.
-- Dış kabuktaki dolu yuvalar belirgin, boş yuvalar içi boş; içerideki tüm dolu kabuklar gerçek elektron sayılarıyla fakat soluk gösterilir.
-- Bohr tipi kabuklar **öğretici şemadır**, elektronların gerçek uzaysal konumları veya s/p/d orbital diyagramı değildir. Fe, Cu ve Zn'nin elektron yerleşimleri basit oktet bağ tahmini anlamına gelmez.
+Mat mavi-gri **ametal**, kiremit tonları **metal**, petrol mavisi **soygaz**, ametale yakın soluk mavi-gri **yarımetal** kategorisini gösterir.
 
-## Çalıştırma
+Kart üstü koyu, gövdesi açıktır; atom numarası başlığın sağ üstünde bulunur. İç kabuktaki elektronlar silik, dış kabuktakiler belirgindir. Hidrojen ve helyum iki yuvalı; yaygın sekizli gösterim diğer elementlerde **solda dört + sağda dört** yuvalıdır.
 
-Hiçbir npm paketi veya uzak CDN gerekmez. `index.html`, `styles.css` ve `app.js` aynı dizindedir. Dosyayı doğrudan tarayıcıda açabilir veya yerel sunucuyla çalıştırabilirsiniz:
+**Bilimsel sınır:** Bohr tipi kabuk çizimi öğrenme amaçlıdır; elektronların gerçek uzaysal yerleşimini veya atom orbitallerini göstermez. Geçiş ve iç geçiş metalleri için yalnızca dış kabuk elektronlarından iyon yükü/bağ kapasitesi çıkarılmamalıdır. Sanal kartların kabuk elektron verileri [Bowserinator/Periodic-Table-JSON](https://github.com/Bowserinator/Periodic-Table-JSON) kaynağındaki *shells* alanıyla karşılaştırılarak alınmıştır (CC BY-SA 3.0); en ağır elementlerde bazı konfigürasyonlar teoriktir.
+
+## Geliştirme ve doğrulama
+
+Uzak kütüphane, CDN veya npm bağımlılığı yoktur. `index.html` doğrudan açılabilir veya şu şekilde servis edilebilir:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Ardından `http://localhost:8000` adresini açın.
+`http://localhost:8000` üzerinden görüntülenir. Statik uygulama GitHub Pages ile yayınlanabilir.
 
-GitHub Pages için **Settings → Pages → Deploy from a branch → main / root** seçimi yeterlidir (değişiklikler main'e birleştirildikten sonra).
+Bağımlılıksız test:
 
-## Kart seti
+```bash
+node tests/smoke.cjs
+```
 
-**Seviye 1 (12):** H, He, Li, C, N, O, F, Ne, Na, Mg, Cl, Ar.
+Testler bütün elementlerin atom numaraları/elektron kabuklarını, **118 tıklanabilir hücreyi**, 25 gerçek kartı ve sanal kart gösterimini kontrol eder.
 
-**Seviye 2 (7):** Si, Ge, P, S, Al, K, Ca.
+## Fiziksel kart seti
 
-**Seviye 3 (6):** Be, B, Fe, Cu, Zn, Ga.
+- **Seviye 1 (12):** H, He, Li, C, N, O, F, Ne, Na, Mg, Cl, Ar.
+- **Seviye 2 (7):** Si, Ge, P, S, Al, K, Ca.
+- **Seviye 3 (6):** Be, B, Fe, Cu, Zn, Ga.
 
-Toplam **25 farklı element**. Bor ve Germanyum ayrı ek paket değildir. Baskı için tek dosyalık **25 element kartları A4 PDF** ve **25 element vurgulu periyodik tablo A4 yatay PDF** ayrıca oluşturulmuştur.
-
-> Bu ilk sürüm atomları tanıma arayüzüdür. Molekül oluşturma, görev kartları, puanlama ve çok oyunculu oynanış sonraki aşamaya bırakılmıştır.
+Toplam **25 farklı element**. Görev kartları ve molekül kurma mekanikleri ileride eklenecektir.
