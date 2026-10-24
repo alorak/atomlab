@@ -189,33 +189,67 @@ const mainRows = [
  [87,88,"act",...Array.from({length:15},(_,i)=>104+i)]
 ];
 
+// Shell electron counts, Z=1..118; based on Bowserinator/Periodic-Table-JSON (CC BY-SA 3.0).
+
+// Heavy-element shell configurations may be theoretical; card diagrams are educational models.
+
+const SHELLS_BY_Z = [null,[1],[2],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[2,8],[2,8,1],[2,8,2],[2,8,3],[2,8,4],[2,8,5],[2,8,6],[2,8,7],[2,8,8],[2,8,8,1],[2,8,8,2],[2,8,9,2],[2,8,10,2],[2,8,11,2],[2,8,13,1],[2,8,13,2],[2,8,14,2],[2,8,15,2],[2,8,16,2],[2,8,18,1],[2,8,18,2],[2,8,18,3],[2,8,18,4],[2,8,18,5],[2,8,18,6],[2,8,18,7],[2,8,18,8],[2,8,18,8,1],[2,8,18,8,2],[2,8,18,9,2],[2,8,18,10,2],[2,8,18,12,1],[2,8,18,13,1],[2,8,18,13,2],[2,8,18,15,1],[2,8,18,16,1],[2,8,18,18],[2,8,18,18,1],[2,8,18,18,2],[2,8,18,18,3],[2,8,18,18,4],[2,8,18,18,5],[2,8,18,18,6],[2,8,18,18,7],[2,8,18,18,8],[2,8,18,18,8,1],[2,8,18,18,8,2],[2,8,18,18,9,2],[2,8,18,19,9,2],[2,8,18,21,8,2],[2,8,18,22,8,2],[2,8,18,23,8,2],[2,8,18,24,8,2],[2,8,18,25,8,2],[2,8,18,25,9,2],[2,8,18,27,8,2],[2,8,18,28,8,2],[2,8,18,29,8,2],[2,8,18,30,8,2],[2,8,18,31,8,2],[2,8,18,32,8,2],[2,8,18,32,9,2],[2,8,18,32,10,2],[2,8,18,32,11,2],[2,8,18,32,12,2],[2,8,18,32,13,2],[2,8,18,32,14,2],[2,8,18,32,15,2],[2,8,18,32,17,1],[2,8,18,32,18,1],[2,8,18,32,18,2],[2,8,18,32,18,3],[2,8,18,32,18,4],[2,8,18,32,18,5],[2,8,18,32,18,6],[2,8,18,32,18,7],[2,8,18,32,18,8],[2,8,18,32,18,8,1],[2,8,18,32,18,8,2],[2,8,18,32,18,9,2],[2,8,18,32,18,10,2],[2,8,18,32,20,9,2],[2,8,18,32,21,9,2],[2,8,18,32,22,9,2],[2,8,18,32,24,8,2],[2,8,18,32,25,8,2],[2,8,18,32,25,9,2],[2,8,18,32,27,8,2],[2,8,18,32,28,8,2],[2,8,18,32,29,8,2],[2,8,18,32,30,8,2],[2,8,18,32,31,8,2],[2,8,18,32,32,8,2],[2,8,18,32,32,8,3],[2,8,18,32,32,10,2],[2,8,18,32,32,11,2],[2,8,18,32,32,12,2],[2,8,18,32,32,13,2],[2,8,18,32,32,14,2],[2,8,18,32,32,15,2],[2,8,18,32,32,16,2],[2,8,18,32,32,17,2],[2,8,18,32,32,18,2],[2,8,18,32,32,18,3],[2,8,18,32,32,18,4],[2,8,18,32,32,18,5],[2,8,18,32,32,18,6],[2,8,18,32,32,18,7],[2,8,18,32,32,18,8]];
+
 let selected="H";
+
+function shellInfo(e){
+  const known=CARD_INFO[e.symbol];
+  if(known)return known;
+  return {shells:SHELLS_BY_Z[e.z],group:groupOf(e.z),type:categoryLabel(e.z),virtual:true};
+}
+
+function groupOf(z){
+  for(const row of mainRows){
+    const idx=row.indexOf(z);
+    if(idx!==-1)return idx+1;
+  }
+  return null;
+}
+
+function categoryLabel(z){
+  const className=family(z);
+  return {nonmetal:"Ametal",metalloid:"Yarımetal",noble:"Soygaz",alkali:"Alkali metal",alkaline:"Toprak alkali metal",post:"Metal",transition:"Geçiş metali",dblock:"d-blok metali",lanth:"Lantanit",act:"Aktinit"}[className]||"Metal";
+}
+
 function gridPosition(node,column,row){node.style.gridColumn=String(column);node.style.gridRow=String(row);}
-function putLabel(root,label,column,row,classname) {
-  const node=document.createElement("span");node.textContent=label;node.className=classname;
+
+function putLabel(root,label,column,row,classname){
+  const node=document.createElement("span");
+  node.textContent=label;node.className=classname;
   gridPosition(node,column,row);root.append(node);
 }
-function cellFor(z,column,row) {
-  const e=elements[z], isAvailable=ACTIVE.has(e.symbol);
-  const node=document.createElement(isAvailable?"button":"div");
-  if (isAvailable) {node.type="button";node.addEventListener("click",()=>openAtom(e.symbol));}
-  node.className="cell "+(isAvailable?"available":"unavailable");
+
+function cellFor(z,column,row){
+  const e=elements[z],available=ACTIVE.has(e.symbol);
+  const node=document.createElement("button");
+  node.type="button";
+  node.className="cell "+(available?"available":"unavailable");
   node.style.cssText=varsFor(z);
-  node.title=`${e.z} · ${e.name}`+(isAvailable?" · Kartını aç":" · Kart setinde yok");
-  if (isAvailable) node.setAttribute("aria-label",e.name+" atom kartını aç");
+  node.title=`${e.z} · ${e.name} · ${available?"Kart setinde":"Sanal kart"}`;
+  node.setAttribute("aria-label",`${e.name}, ${available?"fiziksel":"sanal"} atom kartını göster`);
+  node.setAttribute("aria-pressed","false");
   node.dataset.search=`${e.z} ${e.symbol} ${e.name}`.toLocaleLowerCase("tr-TR");
+  node.dataset.element=e.symbol;
   gridPosition(node,column,row);
   node.innerHTML=`<span class="num">${e.z}</span><span class="sym">${e.symbol}</span><span class="name">${e.name}</span>`;
+  node.addEventListener("click",()=>selectElement(e.symbol));
   return node;
 }
+
 function buildPeriodic(){
   const root=document.getElementById("periodic-grid");
   for(let col=1;col<=18;col++)putLabel(root,String(col),col,1,"group-label");
   for(let row=0;row<7;row++){
     mainRows[row].forEach((value,col)=>{
-      if (typeof value==="number") root.append(cellFor(value,col+1,row+2));
+      if(typeof value==="number")root.append(cellFor(value,col+1,row+2));
       else if(typeof value==="string"){
-        const p=document.createElement("div");p.className="cell placeholder";
+        const p=document.createElement("div");
+        p.className="cell placeholder";
         p.innerHTML=value==="lanth"?"57–71<br>Lantanit":"89–103<br>Aktinit";
         gridPosition(p,col+1,row+2);root.append(p);
       }
@@ -226,95 +260,96 @@ function buildPeriodic(){
     for(let i=0;i<15;i++)root.append(cellFor(start+i,i+4,row));
   });
 }
+
 function filterPeriodic(){
   const q=document.getElementById("periodic-search").value.trim().toLocaleLowerCase("tr-TR");
   const only=document.getElementById("only-available").checked;
-  document.querySelectorAll("#periodic-grid .cell[data-search]").forEach(node=>{
+  document.querySelectorAll("#periodic-grid .cell[data-element]").forEach(node=>{
     const match=!q||node.dataset.search.includes(q);
-    node.classList.toggle("faded",!match||(only&&!node.classList.contains("available")));
+    const mutedByFilter=only&&node.classList.contains("unavailable");
+    node.classList.toggle("faded",!match||mutedByFilter);
     node.classList.toggle("match",Boolean(q&&match));
   });
 }
-function switchPage(page){
-  document.querySelectorAll(".page").forEach(n=>n.classList.toggle("active",n.id==="page-"+page));
-  document.querySelectorAll(".nav-item").forEach(n=>{
-    const active=n.dataset.page===page;
-    n.classList.toggle("active",active);
-    if(active)n.setAttribute("aria-current","page");else n.removeAttribute("aria-current");
-  });
-  location.hash=page==="atoms"?"atomlar":"periyodik-tablo";
+
+function selectElement(symbol){
+  if(!bySymbol[symbol])return;
+  selected=symbol;
+  renderAtom();
+  if(window.innerWidth<=790){
+    document.getElementById("inspector").scrollIntoView({block:"start",behavior:"smooth"});
+  }
 }
-function openAtom(symbol) {
-  selected=symbol; renderAtom();
-  switchPage("atoms");
-  document.querySelector(".site-header").scrollIntoView({behavior:"smooth",block:"start"});
-}
-function createSelector(){
- const root=document.getElementById("atom-selector");
- const frag=document.createDocumentFragment();
- for(const symbol of CARD_ORDER){
-   const e=bySymbol[symbol],b=document.createElement("button");
-   b.className="atom-choice";b.type="button";b.dataset.element=symbol;
-   b.style.cssText=varsFor(e.z);b.innerHTML=`<strong>${symbol}</strong><small>${e.name}</small>`;
-   b.addEventListener("click",()=>{selected=symbol;renderAtom();});
-   frag.append(b);
- }
- root.append(frag);
-}
-function shellSvg(e,info,color) {
-  const shells=info.shells, count=shells.length, outer=85;
-  const radii=count===1?[]:count===2?[43]:count===3?[29,56]:[24,41,61];
+
+function shellSvg(e,info,color){
+  const shells=info.shells;
+  const outer=89, center=110;
+  const ringCount=shells.length-1;
+  const radii=Array.from({length:ringCount},(_,i)=>ringCount===1?41:16+i*(59/(ringCount-1)));
   const rings=radii.map((r,i)=>{
     const n=shells[i];
+    const size=n>18?2.35:n>10?2.8:3.4;
     const pts=Array.from({length:n},(_,j)=>{
-      const a=-Math.PI/2+2*Math.PI*j/n;
-      const px=n===2?(j===0?-r:r):r*Math.cos(a);
-      const py=n===2?0:r*Math.sin(a);
-      return `<circle cx="${110+px}" cy="${110+py}" r="${n>12?2.8:3.6}" fill="#91a8b9" opacity=".65"/>`;
+      const a=n===2?Math.PI*j:-Math.PI/2+(2*Math.PI*j/n);
+      return `<circle cx="${(center+r*Math.cos(a)).toFixed(2)}" cy="${(center+r*Math.sin(a)).toFixed(2)}" r="${size}" fill="#8da5b5" opacity=".61"/>`;
     }).join("");
-    return `<circle cx="110" cy="110" r="${r}" stroke="#9aafbf" stroke-width="1" stroke-dasharray="3 4" fill="none" opacity=".7"/>${pts}`;
+    return `<circle cx="${center}" cy="${center}" r="${r.toFixed(2)}" stroke="#9db1bf" stroke-width="1" stroke-dasharray="3 4" fill="none" opacity=".68"/>${pts}`;
   }).join("");
-  const positions=e.z<=2?[[-outer,0],[outer,0]]:[127,160,200,233,53,20,-20,-53].map(a=>[outer*Math.cos(a*Math.PI/180),-outer*Math.sin(a*Math.PI/180)]);
-  const dots=positions.map(([x,y],i)=>`<circle cx="${110+x}" cy="${110+y}" r="7" fill="${i<shells.at(-1)?color:"#fff"}" stroke="${color}" stroke-width="2.3"/>`).join("");
-  return `<svg viewBox="0 0 220 220" aria-label="${e.name} için elektron kabukları ${shells.join("–")}" role="img">
-    <circle cx="110" cy="110" r="${outer}" fill="none" stroke="${color}" stroke-width="1.4" opacity=".55"/>
-    <circle cx="110" cy="110" r="25" fill="${color}" opacity=".12"/>
+  const outerCount=shells.at(-1);
+  const positions=e.z<=2?[[-outer,0],[outer,0]]:outerCount<=8?[
+    [-63,-63],[-84,-29],[-84,29],[-63,63],
+    [63,-63],[84,-29],[84,29],[63,63]
+  ]:Array.from({length:outerCount},(_,i)=>[
+    outer*Math.cos(-Math.PI/2+i*2*Math.PI/outerCount),
+    outer*Math.sin(-Math.PI/2+i*2*Math.PI/outerCount)
+  ]);
+  const size=outerCount>8?3.8:7;
+  const dots=positions.map(([x,y],i)=>`<circle cx="${(center+x).toFixed(2)}" cy="${(center+y).toFixed(2)}" r="${size}" fill="${i<outerCount?color:"#fff"}" stroke="${color}" stroke-width="${outerCount>8?1.4:2.3}"/>`).join("");
+  return `<svg viewBox="0 0 220 220" role="img" aria-label="${e.name} için elektron kabukları: ${shells.join("–")}">
+    <circle cx="${center}" cy="${center}" r="${outer}" fill="none" stroke="${color}" stroke-width="1.5" opacity=".55"/>
+    <circle cx="${center}" cy="${center}" r="25" fill="${color}" opacity=".12"/>
     ${rings}
-    <text x="110" y="119" font-size="${e.symbol.length>1?34:43}" text-anchor="middle" font-weight="750" fill="${color}">${e.symbol}</text>
-    ${dots}</svg>`;
+    <text x="110" y="119" text-anchor="middle" font-size="${e.symbol.length>1?34:43}" font-weight="750" fill="${color}">${e.symbol}</text>
+    ${dots}
+  </svg>`;
 }
-function cardFooter(e,info) {
-  const familyName=family(e.z);
-  return ({alkali:"Alkali metal",alkaline:"Toprak alkali metal",post:"Geçiş sonrası metal",transition:"Geçiş metali",dblock:"d-blok metali"})[familyName]||info.type;
-}
+
 function renderAtom(){
-  const e=bySymbol[selected], info=CARD_INFO[selected];
-  document.querySelectorAll(".atom-choice").forEach(b=>{
-    const active=b.dataset.element===selected;
-    b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active));
-  });
-  document.getElementById("detail-title").textContent=e.name;
-  document.getElementById("detail-number").textContent=e.z;
-  document.getElementById("detail-group").textContent=info.group+". grup";
-  document.getElementById("detail-shells").textContent=info.shells.join(" – ");
-  document.getElementById("detail-type").textContent=cardFooter(e,info);
-  let explanation=`${e.name}, ${info.group}. grupta bulunur; atomunda ${e.z} elektron vardır. Dış kabuğunda ${info.shells.at(-1)} elektron gösteriliyor.`;
-  if(["He","Ne","Ar"].includes(selected)) explanation+=" Soygazdır; dış kabuğu doludur ve temel oyunda genellikle bağ yapmayan örnek olarak kullanılır.";
-  else if(["Fe","Cu","Zn"].includes(selected)) explanation+=" d elektronları nedeniyle basit oktet/bağ yuvası modeli, iyon yüklerini tek başına açıklamaz.";
-  else if(["B","Be"].includes(selected)) explanation+=" Bu elementin bazı bileşikleri basit oktet kuralının istisnalarını gösterebilir.";
-  document.getElementById("detail-description").textContent=explanation;
+  const e=bySymbol[selected],info=shellInfo(e);
+  const virtual=!ACTIVE.has(selected);
   const root=document.getElementById("atom-preview");
-  const name=e.name,color=palette[family(e.z)][0];
-  root.innerHTML=`<article class="atom-card" style="${varsFor(e.z)}">
-    <div class="card-header"><strong>${name}</strong><small>${info.group}. grup</small><div class="card-z">${e.z}</div></div>
+  const status=document.getElementById("card-status");
+  status.classList.toggle("virtual",virtual);
+  status.textContent=virtual?"Sanal kart · Sette yok":"Kart setinde var";
+  document.querySelectorAll("#periodic-grid .cell[data-element]").forEach(node=>{
+    const active=node.dataset.element===selected;
+    node.classList.toggle("selected",active);
+    node.setAttribute("aria-pressed",String(active));
+  });
+  const groupLabel=info.group?`${info.group}. grup`:categoryLabel(e.z);
+  const type=categoryLabel(e.z);
+  document.getElementById("detail-title").textContent=e.name;
+  document.getElementById("detail-group").textContent=groupLabel;
+  document.getElementById("detail-shells").textContent=info.shells.join(" – ");
+  document.getElementById("detail-type").textContent=type;
+  let message=virtual?"Bu element fiziksel kart setinde yoktur. Soluk kartı yalnızca dijital inceleme için oluşturuldu.":"Bu element fiziksel Atom Laboratuvarı kart setinde bulunuyor.";
+  if(["He","Ne","Ar"].includes(selected))message+=" Soygaz olduğu için temel oyunda bağ oluşturmayan örnek olarak kullanılır.";
+  if(["Fe","Cu","Zn"].includes(selected))message+=" Bağlanma ve iyon yükleri yalnızca dış kabuk yuvalarıyla açıklanamaz.";
+  if(e.z>=104)message+=" Ağır elementlerin bazı elektron dağılımları kuramsal tahminlere dayanır.";
+  document.getElementById("detail-description").textContent=message;
+  const color=palette[family(e.z)][0];
+  root.innerHTML=`<article class="atom-card${virtual?" virtual":""}" style="${varsFor(e.z)}">
+    <div class="card-header"><strong>${e.name}</strong><small>${groupLabel}</small><div class="card-z">${e.z}</div></div>
     <div class="diagram">${shellSvg(e,info,color)}</div>
-    <div class="card-footer">${cardFooter(e,info)}</div></article>`;
+    <div class="card-footer">${type}</div>
+  </article>`;
 }
+
 function init(){
-  buildPeriodic();createSelector();renderAtom();
+  buildPeriodic();
+  renderAtom();
   document.getElementById("periodic-search").addEventListener("input",filterPeriodic);
   document.getElementById("only-available").addEventListener("change",filterPeriodic);
-  document.querySelectorAll(".nav-item").forEach(b=>b.addEventListener("click",()=>switchPage(b.dataset.page)));
-  if(location.hash==="#atomlar")switchPage("atoms");
 }
+
 init();
