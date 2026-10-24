@@ -81,3 +81,14 @@ button:focus-visible,input:focus-visible,.periodic-scroller:focus-visible{outlin
 @media(max-width:1120px){.missions-layout{grid-template-columns:minmax(0,1fr) 300px}.mission-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:790px){.missions-layout{grid-template-columns:1fr}.mission-detail{position:static;order:-1}.mission-stage-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:450px){.top-tab{padding:7px 9px;font-size:11px}.missions-top{align-items:stretch;flex-direction:column;gap:6px}.mission-list{grid-template-columns:1fr 1fr;gap:7px}.mission-tile{padding:10px;min-height:130px}.stage-tab{padding:8px;font-size:11px}.stage-tab small{font-size:10px}.mission-detail{padding:15px}}
+
+
+/* Mission diagrams use the same family palette as physical cards; never mistake ionic ratios for molecules. */
+.missions-layout{grid-template-columns:minmax(0,1fr) 395px}
+.mission-solution-graphic,.mission-visual{margin:10px 0 15px}
+.mission-visual .mission-diagram-scroll{overflow-x:auto;scrollbar-width:thin;border:1px solid #dfe7ee;background:#f9fbfc;border-radius:11px;padding:8px 3px}
+.mission-visual svg{display:block;width:100%;min-width:335px;height:auto;overflow:visible}
+.mission-visual figcaption{font-size:11px;line-height:1.5;color:#5e7685;margin:9px 2px 0}
+.solution-area h3{line-height:1.4}
+@media(max-width:1120px){.missions-layout{grid-template-columns:minmax(0,1fr) 355px}.mission-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:790px){.missions-layout{grid-template-columns:1fr}.mission-detail{max-width:610px;width:100%;justify-self:center}}
