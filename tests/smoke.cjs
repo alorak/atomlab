@@ -31,6 +31,20 @@ for(let z=1;z<=118;z++){
 for(const [sym,expected] of [["H","1"],["He","2"],["O","2,6"],["Si","2,8,4"],["Ge","2,8,18,4"],["Fe","2,8,14,2"],["Cu","2,8,18,1"],["Zn","2,8,18,2"]]){
   assert.equal(api.shellInfo(api.bySymbol[sym]).shells.join(","),expected,sym);
 }
+// The first pair (1s) must remain visible outside the element symbol;
+// three-shell elements should no longer jump from radius 16 to 75.
+for(const [symbol,radii] of [
+  ["C",[43]],["O",[43]],["Si",[41,65]],["Al",[41,65]],
+  ["P",[41,65]],["S",[41,65]],["Cl",[41,65]],["Ar",[41,65]],
+  ["Ge",[38,56,73]],["Fe",[38,56,73]],["Cu",[38,56,73]]
+]){
+  const element=api.bySymbol[symbol];
+  const svg=api.shellSvg(element,api.shellInfo(element),"#123456");
+  const actual=[...svg.matchAll(/<circle cx="110" cy="110" r="([0-9.]+)" stroke="#9db1bf"/g)].map(match=>Number(match[1]));
+  assert.deepEqual(actual,radii,"unbalanced inner shells for "+symbol);
+  assert.ok(svg.includes('r="5" fill="#7999ad" opacity=".88"'),"inner electron pair too faint for "+symbol);
+  assert.ok(radii[0]>25+5,"inner-shell electrons overlap nucleus for "+symbol);
+}
 assert.equal(api.groupOf(8),16);
 assert.equal(api.groupOf(32),14);
 assert.equal(api.groupOf(57),null);
