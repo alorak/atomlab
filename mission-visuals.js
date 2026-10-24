@@ -11,7 +11,7 @@ function escSvg(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").r
 function solutionMiniCard(sym,x,y,w,h,kind){
  const e=bySymbol[sym],valence=shellInfo(e).shells.at(-1),p=palette[family(e.z)];
  const color=p[0],light=p[1],chip=p[2],cx=w/2,head=26;
- const mid=kind==="ionic"&&w<74?52:h>112?65:57;
+ const mid=h<=100?52:h>112?65:57;
  const slots=e.z<=2?[[-22,0],[22,0]]:[[-18,-20],[-24,-7],[-24,7],[-18,20],[18,-20],[24,-7],[24,7],[18,20]];
  const dots=slots.map(([dx,dy],i)=>`<circle cx="${cx+dx}" cy="${mid+dy}" r="3" fill="${i<valence?color:"#ffffff"}" stroke="${color}" stroke-width="1"/>`).join("");
  const cat=({nonmetal:"Ametal",metalloid:"Yarımetal",noble:"Soygaz",alkali:"Metal",alkaline:"Metal",post:"Metal",dblock:"Metal",transition:"Metal"})[family(e.z)]||"Metal";
