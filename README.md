@@ -31,6 +31,8 @@ Bağımlılıksız test:
 
 ```bash
 node tests/smoke.cjs
+node tests/missions.cjs
+node tests/mission-visuals.cjs
 ```
 
 Testler bütün elementlerin atom numaraları/elektron kabuklarını, **118 tıklanabilir hücreyi**, 25 gerçek kartı ve sanal kart gösterimini kontrol eder.
@@ -41,4 +43,18 @@ Testler bütün elementlerin atom numaraları/elektron kabuklarını, **118 tık
 - **Seviye 2 (7):** Si, Ge, P, S, Al, K, Ca.
 - **Seviye 3 (6):** Be, B, Fe, Cu, Zn, Ga.
 
-Toplam **25 farklı element**. Görev kartları ve molekül kurma mekanikleri ileride eklenecektir.
+Toplam **25 farklı element**.
+
+## Dört aşamalı görevler ve görsel çözümler
+
+**Görevler** ekranında 26 öğretici kart bulunur: molekülleri keşfet (4), kovalent bağlar (8), iyonik bağlar (8), kristaller ve özel durumlar (6).
+
+Bir görevde **Çözümü göster** seçilince önce kullanılan atom kartları minyatür fiziksel kart görünümünde çizilir:
+
+- O₂: iki Oksijen kartı, aralarında **çift bağ** (iki çizgi).
+- N₂: iki Azot kartı, aralarında **üçlü bağ** (üç çizgi).
+- H₂O, NH₃, CH₄, CO₂ vb.: doğru sayıda atom kartı ve ilgili kovalent bağların iki boyutlu şeması.
+- NaCl, MgCl₂, Al₂O₃, Fe₂O₃ vb.: kart sayısı, oluşan **iyon yükleri** ve formül oranı; lokalize kovalent bağ çizgisi kullanılmaz.
+- SiO₂, GeO₂ ve SiC: **formül oranı ve ağın sürdüğü** gösterilir; bu katılar bağımsız moleküllermiş gibi sunulmaz.
+
+Minyatür kartlardaki elektron yuvaları, küçük boyutta okunabilirlik için sadeleştirilmiştir. **Gerçek bağ doğrulama, sürükle-bırak ve otomatik puanlama** henüz eklenmedi.
