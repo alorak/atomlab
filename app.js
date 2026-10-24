@@ -23,7 +23,7 @@ const CARD_ORDER = ["H","He","Li","C","N","O","F","Ne","Na","Mg","Cl","Ar",
  "Si","Ge","P","S","Al","K","Ca","Be","B","Fe","Cu","Zn","Ga"];
 
 // Atomic number | symbol | Turkish element name (all 118).
-const RAW = String.raw\`1|H|Hidrojen
+const RAW = String.raw`1|H|Hidrojen
 2|He|Helyum
 3|Li|Lityum
 4|Be|Berilyum
@@ -140,7 +140,7 @@ const RAW = String.raw\`1|H|Hidrojen
 115|Mc|Moskovyum
 116|Lv|Livermoryum
 117|Ts|Tennessin
-118|Og|Oganesson\`;
+118|Og|Oganesson`;
 
 const elements = {};
 const bySymbol = {};
@@ -177,7 +177,7 @@ function family(z) {
 }
 function varsFor(z) {
   const p=palette[family(z)];
-  return \`--color:\${p[0]};--light:\${p[1]};--chip:\${p[2]};\`;
+  return `--color:${p[0]};--light:${p[1]};--chip:${p[2]};`;
 }
 const mainRows = [
  [1,...Array(16).fill(null),2],
@@ -201,11 +201,11 @@ function cellFor(z,column,row) {
   if (isAvailable) {node.type="button";node.addEventListener("click",()=>openAtom(e.symbol));}
   node.className="cell "+(isAvailable?"available":"unavailable");
   node.style.cssText=varsFor(z);
-  node.title=\`\${e.z} · \${e.name}\`+(isAvailable?" · Kartını aç":" · Kart setinde yok");
+  node.title=`${e.z} · ${e.name}`+(isAvailable?" · Kartını aç":" · Kart setinde yok");
   if (isAvailable) node.setAttribute("aria-label",e.name+" atom kartını aç");
-  node.dataset.search=\`\${e.z} \${e.symbol} \${e.name}\`.toLocaleLowerCase("tr-TR");
+  node.dataset.search=`${e.z} ${e.symbol} ${e.name}`.toLocaleLowerCase("tr-TR");
   gridPosition(node,column,row);
-  node.innerHTML=\`<span class="num">\${e.z}</span><span class="sym">\${e.symbol}</span><span class="name">\${e.name}</span>\`;
+  node.innerHTML=`<span class="num">${e.z}</span><span class="sym">${e.symbol}</span><span class="name">${e.name}</span>`;
   return node;
 }
 function buildPeriodic(){
@@ -255,7 +255,7 @@ function createSelector(){
  for(const symbol of CARD_ORDER){
    const e=bySymbol[symbol],b=document.createElement("button");
    b.className="atom-choice";b.type="button";b.dataset.element=symbol;
-   b.style.cssText=varsFor(e.z);b.innerHTML=\`<strong>\${symbol}</strong><small>\${e.name}</small>\`;
+   b.style.cssText=varsFor(e.z);b.innerHTML=`<strong>${symbol}</strong><small>${e.name}</small>`;
    b.addEventListener("click",()=>{selected=symbol;renderAtom();});
    frag.append(b);
  }
@@ -270,18 +270,18 @@ function shellSvg(e,info,color) {
       const a=-Math.PI/2+2*Math.PI*j/n;
       const px=n===2?(j===0?-r:r):r*Math.cos(a);
       const py=n===2?0:r*Math.sin(a);
-      return \`<circle cx="\${110+px}" cy="\${110+py}" r="\${n>12?2.8:3.6}" fill="#91a8b9" opacity=".65"/>\`;
+      return `<circle cx="${110+px}" cy="${110+py}" r="${n>12?2.8:3.6}" fill="#91a8b9" opacity=".65"/>`;
     }).join("");
-    return \`<circle cx="110" cy="110" r="\${r}" stroke="#9aafbf" stroke-width="1" stroke-dasharray="3 4" fill="none" opacity=".7"/>\${pts}\`;
+    return `<circle cx="110" cy="110" r="${r}" stroke="#9aafbf" stroke-width="1" stroke-dasharray="3 4" fill="none" opacity=".7"/>${pts}`;
   }).join("");
   const positions=e.z<=2?[[-outer,0],[outer,0]]:[127,160,200,233,53,20,-20,-53].map(a=>[outer*Math.cos(a*Math.PI/180),-outer*Math.sin(a*Math.PI/180)]);
-  const dots=positions.map(([x,y],i)=>\`<circle cx="\${110+x}" cy="\${110+y}" r="7" fill="\${i<shells.at(-1)?color:"#fff"}" stroke="\${color}" stroke-width="2.3"/>\`).join("");
-  return \`<svg viewBox="0 0 220 220" aria-label="\${e.name} için elektron kabukları \${shells.join("–")}" role="img">
-    <circle cx="110" cy="110" r="\${outer}" fill="none" stroke="\${color}" stroke-width="1.4" opacity=".55"/>
-    <circle cx="110" cy="110" r="25" fill="\${color}" opacity=".12"/>
-    \${rings}
-    <text x="110" y="119" font-size="\${e.symbol.length>1?34:43}" text-anchor="middle" font-weight="750" fill="\${color}">\${e.symbol}</text>
-    \${dots}</svg>\`;
+  const dots=positions.map(([x,y],i)=>`<circle cx="${110+x}" cy="${110+y}" r="7" fill="${i<shells.at(-1)?color:"#fff"}" stroke="${color}" stroke-width="2.3"/>`).join("");
+  return `<svg viewBox="0 0 220 220" aria-label="${e.name} için elektron kabukları ${shells.join("–")}" role="img">
+    <circle cx="110" cy="110" r="${outer}" fill="none" stroke="${color}" stroke-width="1.4" opacity=".55"/>
+    <circle cx="110" cy="110" r="25" fill="${color}" opacity=".12"/>
+    ${rings}
+    <text x="110" y="119" font-size="${e.symbol.length>1?34:43}" text-anchor="middle" font-weight="750" fill="${color}">${e.symbol}</text>
+    ${dots}</svg>`;
 }
 function cardFooter(e,info) {
   const familyName=family(e.z);
@@ -298,17 +298,17 @@ function renderAtom(){
   document.getElementById("detail-group").textContent=info.group+". grup";
   document.getElementById("detail-shells").textContent=info.shells.join(" – ");
   document.getElementById("detail-type").textContent=cardFooter(e,info);
-  let explanation=\`\${e.name}, \${info.group}. grupta bulunur; atomunda \${e.z} elektron vardır. Dış kabuğunda \${info.shells.at(-1)} elektron gösteriliyor.\`;
+  let explanation=`${e.name}, ${info.group}. grupta bulunur; atomunda ${e.z} elektron vardır. Dış kabuğunda ${info.shells.at(-1)} elektron gösteriliyor.`;
   if(["He","Ne","Ar"].includes(selected)) explanation+=" Soygazdır; dış kabuğu doludur ve temel oyunda genellikle bağ yapmayan örnek olarak kullanılır.";
   else if(["Fe","Cu","Zn"].includes(selected)) explanation+=" d elektronları nedeniyle basit oktet/bağ yuvası modeli, iyon yüklerini tek başına açıklamaz.";
   else if(["B","Be"].includes(selected)) explanation+=" Bu elementin bazı bileşikleri basit oktet kuralının istisnalarını gösterebilir.";
   document.getElementById("detail-description").textContent=explanation;
   const root=document.getElementById("atom-preview");
   const name=e.name,color=palette[family(e.z)][0];
-  root.innerHTML=\`<article class="atom-card" style="\${varsFor(e.z)}">
-    <div class="card-header"><strong>\${name}</strong><small>\${info.group}. grup</small><div class="card-z">\${e.z}</div></div>
-    <div class="diagram">\${shellSvg(e,info,color)}</div>
-    <div class="card-footer">\${cardFooter(e,info)}</div></article>\`;
+  root.innerHTML=`<article class="atom-card" style="${varsFor(e.z)}">
+    <div class="card-header"><strong>${name}</strong><small>${info.group}. grup</small><div class="card-z">${e.z}</div></div>
+    <div class="diagram">${shellSvg(e,info,color)}</div>
+    <div class="card-footer">${cardFooter(e,info)}</div></article>`;
 }
 function init(){
   buildPeriodic();createSelector();renderAtom();
