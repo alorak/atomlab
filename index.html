@@ -8,13 +8,14 @@
   <title>Atom Laboratuvarı</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./app.js" defer></script>
+  <script src="./missions.js" defer></script>
 </head>
 <body>
   <div class="app-shell">
     <header class="site-header">
-      <div class="brand"><span class="brand-icon" aria-hidden="true">⚛</span><strong>Atom Laboratuvarı</strong></div>
+      <div class="brand"><span class="brand-icon" aria-hidden="true">⚛</span><strong>Atom Laboratuvarı</strong></div><nav class="top-nav" aria-label="Bölümler"><button class="top-tab active" data-view="periodic" aria-pressed="true">Periyodik Tablo</button><button class="top-tab" data-view="missions" aria-pressed="false">Görevler</button></nav>
     </header>
-    <main class="workspace">
+    <main id="periodic-view" class="workspace">
       <section class="table-panel" aria-label="Periyodik tablo">
         <div class="toolbar">
           <label class="search"><span aria-hidden="true">⌕</span><input id="periodic-search" type="search" placeholder="Element ara (ad, sembol, numara)" aria-label="Element ara"></label>
@@ -46,6 +47,13 @@
         <p id="detail-description" class="detail-description"></p>
         <p class="science-note">Elektron kabukları öğretici şemadır; noktalar elektronların gerçek konumları değildir.</p>
       </aside>
+    </main>
+    <main id="missions-view" class="missions-view" hidden>
+      <div class="missions-top"><div class="mission-stage-tabs" id="mission-stage-tabs" role="group" aria-label="Görev aşamaları"></div><span id="mission-count" class="mission-count"></span></div>
+      <div class="missions-layout">
+        <section class="mission-list" id="mission-list" aria-label="Görev kartları"></section>
+        <aside class="mission-detail" id="mission-detail" aria-live="polite"></aside>
+      </div>
     </main>
   </div>
 </body>
