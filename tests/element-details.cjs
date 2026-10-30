@@ -12,23 +12,33 @@ new Function("window",missionSrc.replace(/initMissions\(\);\s*$/,""))(win);
 new Function("window",detailSrc)(win);
 const details=win.ATOMLAB_ELEMENT_DETAILS;
 const modal=new Function("window","bySymbol","shellInfo","shellSvg","palette","family","varsFor","categoryLabel","ACTIVE",
-  modalSrc.replace(/initElementModal\(\);\s*$/,"return {renderElementDetails,naturalOccurrence,missionsUsing};")
+  modalSrc.replace(/initElementModal\(\);\s*$/,"return {renderElementDetails,missionsUsing};")
 )(win,atomAPI.bySymbol,atomAPI.shellInfo,atomAPI.shellSvg,atomAPI.palette,atomAPI.family,atomAPI.varsFor,atomAPI.categoryLabel,atomAPI.ACTIVE);
 
-// Curated content exists for exactly the 25 card elements.
-assert.deepEqual(Object.keys(details).sort(),[...atomAPI.CARD_ORDER].sort());
-for(const symbol of atomAPI.CARD_ORDER){
-  const d=details[symbol];
-  for(const key of ["mass","phase","universe","earth","forms","life"])assert.ok(typeof d[key]==="string"&&d[key].length>0,symbol+" "+key);
-  assert.match(d.mass,/^\d+,\d+$/,symbol+" mass");
-  assert.match(d.phase,/^(Katı|Sıvı|Gaz)/,symbol+" phase");
-  assert.ok(d.partners.length>=1,symbol+" partners");
-  for(const [symbols,text] of d.partners){
+// Curated content exists for all 118 elements.
+assert.equal(Object.keys(details).length,118);
+for(const symbol of Object.keys(atomAPI.bySymbol)){
+  const d=details[symbol],z=atomAPI.bySymbol[symbol].z;
+  assert.ok(d,"missing details "+symbol);
+  for(const key of ["mass","phase","life","fact"])assert.ok(typeof d[key]==="string"&&d[key].length>0,symbol+" "+key);
+  assert.match(d.mass,/^(\d+,\d+|\[\d+\])$/,symbol+" mass");
+  assert.match(d.phase,/^(Katı|Sıvı|Gaz|Bilinmiyor)/,symbol+" phase");
+  // Natural elements describe where they occur; synthetic ones (Z≥95) how they are made.
+  if(z>=95){
+    assert.ok(d.made&&!d.universe&&!d.earth,symbol+" synthetic");
+    assert.ok(d.mass.startsWith("["),symbol+" synthetic mass");
+  }else{
+    for(const key of ["universe","earth","forms"])assert.ok(typeof d[key]==="string"&&d[key].length>0,symbol+" "+key);
+    assert.ok(!d.made,symbol+" is natural");
+    assert.ok(d.partners.length>=1,symbol+" partners");
+  }
+  for(const [symbols,text] of d.partners||[]){
     assert.ok(symbols.length>=1&&text,symbol+" partner entry");
     for(const s of symbols)assert.ok(atomAPI.bySymbol[s],symbol+" unknown partner "+s);
   }
 }
-for(const noble of ["He","Ne","Ar"])assert.ok(details[noble].partnersNote.includes("bağ yapmaz"),noble+" must not imply bonding");
+for(const [symbol,phase] of [["Br","Sıvı"],["Hg","Sıvı"],["Xe","Gaz"],["Rn","Gaz"],["W","Katı"]])assert.equal(details[symbol].phase,phase,symbol);
+for(const noble of ["He","Ne","Ar","Kr","Rn"])assert.ok(details[noble].partnersNote.includes("bağ yapmaz"),noble+" must not imply bonding");
 
 // Rendered dialog: curated sections, clickable partner atoms and mission links.
 const fe=modal.renderElementDetails("Fe");
@@ -45,20 +55,22 @@ for(const symbol of atomAPI.CARD_ORDER){
 assert.equal(modal.missionsUsing("H").length,8);
 assert.ok(!modal.renderElementDetails("Ne").includes("Görevlerde"),"no empty mission section");
 
-// Non-card elements: honest notice instead of invented content.
-for(let z=1;z<=118;z++){
-  const e=atomAPI.bySymbol[Object.keys(atomAPI.bySymbol).find(s=>atomAPI.bySymbol[s].z===z)];
-  const out=modal.renderElementDetails(e.symbol);
-  assert.ok(out.includes(e.name),"dialog for "+e.symbol);
-  if(!atomAPI.ACTIVE.has(e.symbol)){
-    assert.ok(out.includes("atom-card virtual")&&out.includes("Sanal kart"),e.symbol+" virtual");
-    assert.ok(out.includes("fiziksel kart setinde yer almıyor"),e.symbol+" notice");
+// Every element renders; virtual ones keep the virtual-card styling and note.
+for(const symbol of Object.keys(atomAPI.bySymbol)){
+  const e=atomAPI.bySymbol[symbol],out=modal.renderElementDetails(symbol);
+  assert.ok(out.includes(e.name)&&out.includes("Biliyor muydun?"),"dialog for "+symbol);
+  assert.ok(!out.includes("henüz eklenmedi"),symbol+" has content");
+  if(!atomAPI.ACTIVE.has(symbol)){
+    assert.ok(out.includes("atom-card virtual")&&out.includes("Sanal kart"),symbol+" virtual");
+    assert.ok(out.includes("fiziksel kart setinde yer almıyor"),symbol+" notice");
   }
 }
-assert.ok(modal.renderElementDetails("Og").includes("Doğada bulunmaz"));
-assert.ok(modal.renderElementDetails("Tc").includes("Kararlı izotopu yoktur"));
-assert.ok(modal.renderElementDetails("Ra").includes("Radyoaktiftir"));
-assert.equal(modal.naturalOccurrence(29),null);
+const og=modal.renderElementDetails("Og");
+assert.ok(og.includes("Nasıl üretilir?")&&og.includes("Ne işe yarar?")&&!og.includes("Evrende nerede"));
+assert.ok(og.includes("Köşeli parantezli kütle"));
+assert.ok(!og.includes("Sık birlikte bulunduğu atomlar"),"no empty partner section");
+const au=modal.renderElementDetails("Au");
+assert.ok(au.includes("nötron yıldızı")&&au.includes('data-element="Ag"')&&!au.includes("Köşeli parantezli"));
 
 // Page wiring: dialog element, detail button and script order.
 assert.ok(html.includes('<dialog id="element-dialog"'));
@@ -66,4 +78,4 @@ assert.ok(html.includes('id="open-details"'));
 const order=["app.js","element-details.js","element-modal.js","mission-visuals.js","missions.js"].map(f=>html.indexOf(f));
 assert.deepEqual([...order].sort((a,b)=>a-b),order,"script order");
 assert.ok(missionSrc.includes('class="atom-chip" data-element='),"mission atom chips open element details");
-console.log("OK: 25 curated element dialogs, partner atoms, mission links and 93 virtual-card notices.");
+console.log("OK: 118 curated element dialogs, synthetic-element sections, partner atoms and mission links.");

@@ -1,16 +1,7 @@
 "use strict";
 
-// Element detail dialog for all 118 elements. Full content is curated only
-// for the 25 card elements (element-details.js); others get a short notice.
-
-function naturalOccurrence(z){
-  if(z>=95)return "Doğada bulunmaz; nükleer reaktörlerde veya parçacık hızlandırıcılarında yapay olarak üretilir. En ağır olanlar yalnızca birkaç atom hâlinde ve çok kısa ömürlü elde edilmiştir.";
-  if(z===93||z===94)return "Uranyum cevherlerinde yalnızca eser miktarda doğal olarak bulunur; kullanılanların neredeyse tamamı nükleer reaktörlerde üretilir.";
-  if(z===43||z===61)return "Kararlı izotopu yoktur; doğada yalnızca uranyum cevherlerinde eser miktarda bulunur. Kullanılanlar yapay olarak üretilir.";
-  if(z===90||z===92)return "Radyoaktiftir; Dünya oluştuğundan beri kayaçlarda bulunur ve yavaşça bozunarak gezegenin iç ısısına katkıda bulunur.";
-  if(z>=84&&z<=91)return "Radyoaktiftir; doğada yalnızca uranyum ve toryumun bozunmasıyla oluşan eser miktarlarda bulunur.";
-  return null;
-}
+// Element detail dialog for all 118 elements; content lives in element-details.js.
+// Synthetic elements describe how they are made instead of where they occur.
 
 function missionsUsing(symbol){
   return (window.ATOMLAB_MISSIONS||[]).filter(m=>m.atoms[symbol]);
@@ -38,17 +29,19 @@ function renderElementDetails(symbol){
   ].filter(Boolean).map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
   let sections="";
   if(data){
-    const partners=data.partners.map(([symbols,text])=>`<li><span class="partner-atoms">${symbols.map(elementLink).join("")}</span><span>${text}</span></li>`).join("");
-    sections+=detailSection("Evrende nerede, nasıl oluşur?",`<p>${data.universe}</p>`);
-    sections+=detailSection("Dünya'da nerede bulunur?",`<p>${data.earth}</p>`);
-    sections+=detailSection("Doğada hangi formda?",`<p>${data.forms}</p>`);
-    sections+=detailSection("Sık birlikte bulunduğu atomlar",`${data.partnersNote?`<p class="partner-note">${data.partnersNote}</p>`:""}<ul class="partner-list">${partners}</ul>`);
-    sections+=detailSection("Canlılarda ve günlük hayatta",`<p>${data.life}</p>`);
-    if(data.fact)sections+=detailSection("Biliyor muydun?",`<p>${data.fact}</p>`);
+    const text=(title,value)=>value?detailSection(title,`<p>${value}</p>`):"";
+    sections+=text("Evrende nerede, nasıl oluşur?",data.universe);
+    sections+=text("Nasıl üretilir?",data.made);
+    sections+=text("Dünya'da nerede bulunur?",data.earth);
+    sections+=text("Doğada hangi formda?",data.forms);
+    if(data.partners?.length){
+      const partners=data.partners.map(([symbols,label])=>`<li><span class="partner-atoms">${symbols.map(elementLink).join("")}</span><span>${label}</span></li>`).join("");
+      sections+=detailSection("Sık birlikte bulunduğu atomlar",`${data.partnersNote?`<p class="partner-note">${data.partnersNote}</p>`:""}<ul class="partner-list">${partners}</ul>`);
+    }
+    sections+=text(data.made?"Ne işe yarar?":"Canlılarda ve günlük hayatta",data.life);
+    sections+=text("Biliyor muydun?",data.fact);
   }else{
-    const nature=naturalOccurrence(e.z);
-    if(nature)sections+=detailSection("Doğada bulunuşu",`<p>${nature}</p>`);
-    sections+=`<p class="detail-note">Bu element fiziksel kart setinde yer almıyor. Ayrıntılı bulunuş ve kullanım bilgileri şimdilik kart setindeki 25 element için hazırlandı.</p>`;
+    sections+=`<p class="detail-note">Bu element için ayrıntılı bilgi henüz eklenmedi.</p>`;
   }
   const missions=missionsUsing(symbol);
   if(missions.length){
@@ -72,7 +65,7 @@ function renderElementDetails(symbol){
       </div>
       <div class="dialog-main">
         ${sections}
-        <p class="detail-sources">${data?"Bolluk değerleri yaklaşık ve yuvarlanmıştır (kaynaklar: RSC Periyodik Tablo, USGS, CRC Handbook). ":""}Elektron kabukları öğretici şemadır; noktalar elektronların gerçek konumları değildir.</p>
+        <p class="detail-sources">${data?"Bolluk değerleri yaklaşık ve yuvarlanmıştır (kaynaklar: RSC Periyodik Tablo, USGS, CRC Handbook). ":""}${data?.mass.startsWith("[")?"Köşeli parantezli kütle, en kararlı izotopun kütle numarasıdır. ":""}${virtual?"Bu element fiziksel kart setinde yer almıyor. ":""}Elektron kabukları öğretici şemadır; noktalar elektronların gerçek konumları değildir.</p>
       </div>
     </div>
   </div>`;
