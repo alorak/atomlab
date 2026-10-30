@@ -13,7 +13,7 @@ Türkçe ve bağımsız çalışan, **tek ekranlı** periyodik tablo / atom kart
 
 Sağdaki karttaki **Detaylı incele** düğmesi, tablodaki bir hücreye çift tıklama veya görevlerdeki atom etiketleri, elementin detay penceresini (`<dialog>`) açar. Dar ekranlarda tek dokunuş yeterlidir.
 
-Kart setindeki **25 element** için pencerede şunlar bulunur:
+**118 elementin tamamı** için pencerede şunlar bulunur:
 
 - atom kütlesi ve oda sıcaklığındaki hâli,
 - evrende nerede ve nasıl oluştuğu, Dünya'da nerede bulunduğu,
@@ -22,7 +22,9 @@ Kart setindeki **25 element** için pencerede şunlar bulunur:
 - canlılarda ve günlük hayattaki yeri, kısa bir ilginç bilgi,
 - elementi kullanan görevler: görev verisinden otomatik çıkarılır ve göreve bağlantı verir.
 
-İçerik `element-details.js` dosyasındadır. Bolluk değerleri yaklaşık ve yuvarlanmıştır (RSC Periyodik Tablo, USGS, CRC Handbook). Soygazlarda listelenen atomlar bağ değil, karışım olarak belirtilir. Diğer 93 element için uydurma içerik yerine doğada bulunuş notu (yapay / eser miktarda / radyoaktif) ve ayrıntılı bilginin henüz eklenmediği belirtilir.
+Doğada bulunmayan yapay elementlerde (Z ≥ 95) "evrende / Dünya'da" bölümleri yerine **nasıl üretildiği** ve ne işe yaradığı anlatılır. Bu elementlerin kütlesi köşeli parantezle, en kararlı izotopun kütle numarası olarak verilir; oda sıcaklığındaki hâli bilinmeyenler "Bilinmiyor" olarak gösterilir.
+
+İçerik `element-details.js` dosyasındadır. Bolluk değerleri yaklaşık ve yuvarlanmıştır (RSC Periyodik Tablo, USGS, CRC Handbook). Soygazlarda listelenen atomlar bağ değil, karışım olarak belirtilir. Kart setinde olmayan elementlerin penceresi sanal kart görünümünü korur.
 
 ## Renk ve gösterim
 
