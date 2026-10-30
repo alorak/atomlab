@@ -8,6 +8,7 @@
   <title>Atom Laboratuvarı</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./app.js" defer></script>
+  <script src="./cosmic-origin.js" defer></script>
   <script src="./element-details.js" defer></script>
   <script src="./element-modal.js" defer></script>
   <script src="./mission-visuals.js" defer></script>
@@ -22,18 +23,20 @@
       <section class="table-panel" aria-label="Periyodik tablo">
         <div class="toolbar">
           <label class="search"><span aria-hidden="true">⌕</span><input id="periodic-search" type="search" placeholder="Element ara (ad, sembol, numara)" aria-label="Element ara"></label>
+          <div class="color-mode" role="group" aria-label="Tabloyu renklendir"><span>Renk:</span><button type="button" data-color-mode="family" aria-pressed="true">Sınıf</button><button type="button" data-color-mode="origin" aria-pressed="false">Kozmik köken</button></div>
           <label class="toggle"><input id="only-available" type="checkbox"> Kart setini vurgula</label>
         </div>
         <div class="periodic-scroller" role="region" aria-label="Yatay kaydırılabilir periyodik tablo" tabindex="0">
           <div id="periodic-grid" class="periodic-grid"></div>
         </div>
-        <div class="legend">
+        <div class="legend" id="legend-family">
           <span><i class="swatch nonmetal"></i>Ametal</span>
           <span><i class="swatch metal"></i>Metal</span>
           <span><i class="swatch noble"></i>Soygaz</span>
           <span><i class="swatch metalloid"></i>Yarımetal</span>
           <span class="legend-muted">Soluk elementler: sanal kart</span>
         </div>
+        <div class="legend origin-legend" id="legend-origin" hidden></div>
       </section>
       <aside class="inspector" id="inspector" aria-label="Seçilen atomun kartı">
         <div class="inspector-header">
