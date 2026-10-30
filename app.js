@@ -272,13 +272,12 @@ function filterPeriodic(){
   });
 }
 
-function selectElement(symbol){
+// On narrow screens the detail dialog replaces scrolling down to the inspector.
+function selectElement(symbol,{details=window.innerWidth<=790}={}){
   if(!bySymbol[symbol])return;
   selected=symbol;
   renderAtom();
-  if(window.innerWidth<=790){
-    document.getElementById("inspector").scrollIntoView({block:"start",behavior:"smooth"});
-  }
+  if(details&&typeof openElementModal==="function")openElementModal(symbol);
 }
 
 function shellSvg(e,info,color){

@@ -7,7 +7,22 @@ Türkçe ve bağımsız çalışan, **tek ekranlı** periyodik tablo / atom kart
 - **25 fiziksel kart elementi** tam renkle işaretlenir.
 - **Diğer 93 element** tablo üzerinde belirgin biçimde soluktur, ancak hepsi tıklanabilir; sağdaki **sanal kart** aynı şekilde soluk gösterilir ve “Sanal kart · Sette yok” uyarısı taşır.
 - Ayrı “Atom Kartları” sekmesi, büyük sayfa başlığı veya tanıtım alanı bulunmaz.
-- Dar ekranlarda tablo yatay kaydırılabilir, seçim yapıldığında kart önizlemesine geçilir.
+- Dar ekranlarda tablo yatay kaydırılabilir, seçim yapıldığında element detay penceresi açılır.
+
+## Element detay penceresi
+
+Sağdaki karttaki **Detaylı incele** düğmesi, tablodaki bir hücreye çift tıklama veya görevlerdeki atom etiketleri, elementin detay penceresini (`<dialog>`) açar. Dar ekranlarda tek dokunuş yeterlidir.
+
+Kart setindeki **25 element** için pencerede şunlar bulunur:
+
+- atom kütlesi ve oda sıcaklığındaki hâli,
+- evrende nerede ve nasıl oluştuğu, Dünya'da nerede bulunduğu,
+- doğada hangi formda (serbest/bileşik, mineral) bulunduğu,
+- sık birlikte bulunduğu atomlar: etikete tıklayınca o elementin penceresi açılır,
+- canlılarda ve günlük hayattaki yeri, kısa bir ilginç bilgi,
+- elementi kullanan görevler: görev verisinden otomatik çıkarılır ve göreve bağlantı verir.
+
+İçerik `element-details.js` dosyasındadır. Bolluk değerleri yaklaşık ve yuvarlanmıştır (RSC Periyodik Tablo, USGS, CRC Handbook). Soygazlarda listelenen atomlar bağ değil, karışım olarak belirtilir. Diğer 93 element için uydurma içerik yerine doğada bulunuş notu (yapay / eser miktarda / radyoaktif) ve ayrıntılı bilginin henüz eklenmediği belirtilir.
 
 ## Renk ve gösterim
 
@@ -33,6 +48,7 @@ Bağımlılıksız test:
 node tests/smoke.cjs
 node tests/missions.cjs
 node tests/mission-visuals.cjs
+node tests/element-details.cjs
 ```
 
 Testler bütün elementlerin atom numaraları/elektron kabuklarını, **118 tıklanabilir hücreyi**, 25 gerçek kartı ve sanal kart gösterimini kontrol eder.

@@ -8,6 +8,8 @@
   <title>Atom Laboratuvarı</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./app.js" defer></script>
+  <script src="./element-details.js" defer></script>
+  <script src="./element-modal.js" defer></script>
   <script src="./mission-visuals.js" defer></script>
   <script src="./missions.js" defer></script>
 </head>
@@ -45,6 +47,7 @@
           <div><dt>Grup</dt><dd id="detail-group"></dd></div>
           <div><dt>Sınıf</dt><dd id="detail-type"></dd></div>
         </dl>
+        <button type="button" id="open-details" class="details-button" aria-haspopup="dialog">Detaylı incele</button>
         <p id="detail-description" class="detail-description"></p>
         <p class="science-note">Elektron kabukları öğretici şemadır; noktalar elektronların gerçek konumları değildir.</p>
       </aside>
@@ -57,5 +60,6 @@
       </div>
     </main>
   </div>
+  <dialog id="element-dialog" class="element-dialog" aria-labelledby="element-dialog-title"></dialog>
 </body>
 </html>

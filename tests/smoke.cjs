@@ -106,4 +106,13 @@ assert.ok(nodes["card-status"].textContent.includes("Kart setinde"));
 assert.ok(!nodes["atom-preview"].innerHTML.includes('atom-card virtual'));
 assert.equal(hydrogen.attributes["aria-pressed"],"true");
 assert.equal(virtual.attributes["aria-pressed"],"false");
+// Narrow screens open the detail dialog instead of scrolling to the inspector.
+const opened=[];
+global.openElementModal=symbol=>opened.push(symbol);
+global.window.innerWidth=390;
+buttons.find(x=>x.dataset.element==="Fe").click();
+assert.deepEqual(opened,["Fe"]);
+global.window.innerWidth=1440;
+buttons.find(x=>x.dataset.element==="O").click();
+assert.deepEqual(opened,["Fe"],"desktop click keeps the inspector");
 console.log("OK: one-page UI, all 118 buttons, virtual and physical previews, 118 shell models.");

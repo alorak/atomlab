@@ -10,8 +10,9 @@ function showMission(stage,id){
  document.getElementById("mission-count").textContent=`${items.length} görev`;
  list.innerHTML=items.map(m=>`<button type="button" data-id="${m.id}" class="mission-tile ${m.id===selected.id?"active":""}"><small>${m.id}</small><strong>${m.name}</strong><b>${m.formula}</b><span>${m.concept}</span></button>`).join("");
  list.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>showMission(stage,b.dataset.id)));
- const chips=Object.entries(selected.atoms).map(([s,n])=>`<span class="atom-chip">${s} <small>×${n}</small></span>`).join("");
+ const chips=Object.entries(selected.atoms).map(([s,n])=>`<button type="button" class="atom-chip" data-element="${s}" title="${bySymbol[s].name} detayları">${s} <small>×${n}</small></button>`).join("");
  detail.innerHTML=`<div class="detail-kicker"><span>${window.ATOMLAB_STAGES[stage-1][0]}</span><small>${selected.id}</small></div><h2>${selected.name}</h2><div class="large-formula">${selected.formula}</div><h3>Gerekli atomlar</h3><div class="atom-chips">${chips}</div><h3>Görev</h3><p>${selected.goal}</p><button class="reveal-answer" type="button" aria-expanded="false">Çözümü göster</button><div class="solution-area" hidden><h3>Kullanılan atom kartları ve bağlar</h3>${renderMissionDiagram(selected)}<h3>Çözüm</h3><strong>${selected.answer}</strong><p>${selected.why}</p><small>Kazanım: ${selected.concept}</small></div><p class="mission-footnote">Bu aşamada görev kartlarını ve açıklamaları inceleyebilirsiniz; sürükleyerek bağ oluşturma henüz eklenmedi.</p>`;
+ detail.querySelectorAll(".atom-chip").forEach(b=>b.addEventListener("click",()=>selectElement(b.dataset.element,{details:true})));
  detail.querySelector(".reveal-answer").addEventListener("click",e=>{const a=detail.querySelector(".solution-area"),open=a.hidden;a.hidden=!open;e.currentTarget.textContent=open?"Çözümü gizle":"Çözümü göster";e.currentTarget.setAttribute("aria-expanded",String(open));});
 }
 function switchLabView(view){
