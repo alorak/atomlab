@@ -9,6 +9,15 @@ Türkçe ve bağımsız çalışan, **tek ekranlı** periyodik tablo / atom kart
 - Ayrı “Atom Kartları” sekmesi, büyük sayfa başlığı veya tanıtım alanı bulunmaz.
 - Dar ekranlarda tablo yatay kaydırılabilir, seçim yapıldığında element detay penceresi açılır.
 
+## Kozmik köken renklendirmesi
+
+Tablonun üstündeki **Renk: Sınıf / Kozmik köken** seçimi, tabloyu elementlerin Güneş Sistemi'ndeki kökenine göre renklendirir: Büyük Patlama, kozmik ışınlar, ölen küçük kütleli yıldızlar, patlayan büyük kütleli yıldızlar, patlayan beyaz cüceler, nötron yıldızı çarpışmaları, kararsız (yıldızlardan kalan yok) ve yapay.
+
+- Veriler `cosmic-origin.js` dosyasındadır ve Jennifer Johnson'ın "Güneş Sistemi'ndeki elementlerin kökeni" tablosundan sadeleştirilmiştir. Her element için en fazla üç kaynak, baskın olan önce gelecek şekilde listelenir.
+- Hücredeki renk bantlarının payları **şematiktir** (iki kaynakta 65/35, üçte 50/30/20); kesin oranları göstermez.
+- Renkler renk körlüğü testinden geçen bir paletten seçilmiştir; metinler her zaman koyu renkte kalır. Yapay elementler ayrıca çizgili dokuyla ayrılır.
+- Detay penceresinde her elementin kaynakları kısa açıklamalarıyla gösterilir.
+
 ## Element detay penceresi
 
 Sağdaki karttaki **Detaylı incele** düğmesi, tablodaki bir hücreye çift tıklama veya görevlerdeki atom etiketleri, elementin detay penceresini (`<dialog>`) açar. Dar ekranlarda tek dokunuş yeterlidir.
@@ -51,6 +60,7 @@ node tests/smoke.cjs
 node tests/missions.cjs
 node tests/mission-visuals.cjs
 node tests/element-details.cjs
+node tests/cosmic-origin.cjs
 ```
 
 Testler bütün elementlerin atom numaraları/elektron kabuklarını, **118 tıklanabilir hücreyi**, 25 gerçek kartı ve sanal kart gösterimini kontrol eder.

@@ -16,6 +16,16 @@ function detailSection(title,body){
   return `<section class="detail-section"><h3>${title}</h3>${body}</section>`;
 }
 
+function originSummary(symbol){
+  const sources=(window.ATOMLAB_ORIGINS||{})[symbol];
+  if(!sources)return "";
+  const items=sources.map(s=>{
+    const source=window.ATOMLAB_ORIGIN_SOURCES[s];
+    return `<li><i class="swatch" style="background:${source.color}"></i><span><b>${source.label}</b>${source.note}</span></li>`;
+  }).join("");
+  return `<section class="origin-summary"><h3>Kozmik köken</h3><ul>${items}</ul>${sources.length>1?"<p>İlk sıradaki kaynak baskındır.</p>":""}</section>`;
+}
+
 function renderElementDetails(symbol){
   const e=bySymbol[symbol],info=shellInfo(e),data=(window.ATOMLAB_ELEMENT_DETAILS||{})[symbol];
   const virtual=!ACTIVE.has(symbol);
@@ -62,6 +72,7 @@ function renderElementDetails(symbol){
           <div class="card-footer">${type}</div>
         </article>
         <dl class="atom-facts">${facts}</dl>
+        ${originSummary(symbol)}
       </div>
       <div class="dialog-main">
         ${sections}
